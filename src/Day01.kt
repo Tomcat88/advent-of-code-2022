@@ -1,10 +1,10 @@
 fun main() {
 
-    fun getWeights(input: List<String>) = input.fold(listOf<Int>()) { acc, s ->
+    fun getWeights(input: List<String>) = input.fold(listOf(0)) { acc, s ->
         if (s.isBlank()) {
             acc + 0
         } else {
-            acc.dropLast(1) + ((acc.lastOrNull() ?: 0) + s.toInt())
+            acc.dropLast(1) + (acc.last() + s.toInt())
         }
     }
 
