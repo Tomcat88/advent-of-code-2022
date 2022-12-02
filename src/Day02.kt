@@ -1,13 +1,13 @@
 fun main() {
 
     fun part1(input: List<List<String>>): Int =
-        input.map { Pair(it[0].toRPS(), it[1].toRPS()) }.sumOf {
-            it.first.round(it.second).total()
+        input.sumOf {
+            it[1].toRPS().round(it[0].toRPS()).total()
         }
 
     fun part2(input: List<List<String>>): Int =
-        input.map { Pair(it[0].toRPS(), it[1]) }.sumOf {
-            it.first.roundWithStrategy(it.second).total()
+        input.sumOf {
+            it[0].toRPS().roundWithStrategy(it[1]).total()
         }
 
     val input = readInputAndSplit("Day02")
@@ -16,82 +16,50 @@ fun main() {
 }
 
 fun String.toRPS() = when(this) {
-    "A", "X" -> Rock()
-    "B", "Y" -> Paper()
-    "C", "Z" -> Scissors()
+    "A", "X" -> Rock
+    "B", "Y" -> Paper
+    "C", "Z" -> Scissors
     else -> throw IllegalArgumentException("invalid value: $this")
 }
 
-sealed interface RoundResult {
-    val result : Int
-    val modifier : Int
+sealed class RoundResult(private val result: Int, private val modifier: Int) {
     fun total() = result + modifier
 }
 
-class Win(override val result: Int) : RoundResult {
-    override val modifier: Int = 6
-}
+class Win(result: Int) : RoundResult(result, 6)
+class Draw(result: Int) : RoundResult(result, 3)
+class Loss(result: Int) : RoundResult(result, 0)
 
-class Draw(override val result: Int) : RoundResult {
-    override val modifier: Int = 3
-}
+sealed class RPS(private val value: Int) {
+    abstract val winsAgainst: RPS
+    abstract val losesAgainst: RPS
 
-class Loss(override val result: Int) : RoundResult {
-    override val modifier: Int = 0
-}
-
-sealed interface RPS {
-    val value: Int
-    fun round(you: RPS): RoundResult
-    fun roundWithStrategy(strategy: String): RoundResult
-}
-
-class Rock : RPS {
-    override val value : Int = 1
-    override fun round(you: RPS): RoundResult = when(you) {
-        is Rock -> Draw(you.value)
-        is Paper -> Win(you.value)
-        is Scissors -> Loss(you.value)
+    fun round(you: RPS) = when (you) {
+        this -> Draw(value)
+        winsAgainst -> Win(value)
+        else -> Loss(value)
     }
-
-    override fun roundWithStrategy(strategy: String): RoundResult = when(strategy) {
-        "Y" -> round(Rock())
-        "Z" -> round(Paper())
-        "X" -> round(Scissors())
+    fun roundWithStrategy(strategy: String) = when(strategy) {
+        "Y" -> round(this)
+        "Z" -> losesAgainst.round(this)
+        "X" -> winsAgainst.round(this)
         else -> throw IllegalArgumentException("invalid strategy $strategy")
     }
 }
 
-class Paper : RPS {
-    override val value : Int = 2
-    override fun round(you: RPS): RoundResult = when(you) {
-        is Paper -> Draw(you.value)
-        is Scissors -> Win(you.value)
-        is Rock -> Loss(you.value)
-    }
-
-    override fun roundWithStrategy(strategy: String): RoundResult = when(strategy) {
-        "Y" -> round(Paper())
-        "Z" -> round(Scissors())
-        "X" -> round(Rock())
-        else -> throw IllegalArgumentException("invalid strategy $strategy")
-    }
+object Rock : RPS(1) {
+    override val winsAgainst  = Scissors
+    override val losesAgainst = Paper
 }
 
-class Scissors : RPS {
-    override val value : Int = 3
-    override fun round(you: RPS): RoundResult = when(you) {
-        is Scissors -> Draw(you.value)
-        is Rock -> Win(you.value)
-        is Paper -> Loss(you.value)
-    }
+object Paper : RPS(2) {
+    override val winsAgainst = Rock
+    override val losesAgainst = Scissors
+}
 
-    override fun roundWithStrategy(strategy: String): RoundResult = when(strategy) {
-        "Y" -> round(Scissors())
-        "Z" -> round(Rock())
-        "X" -> round(Paper())
-        else -> throw IllegalArgumentException("invalid strategy $strategy")
-    }
+object Scissors : RPS(3) {
+    override val winsAgainst = Paper
+    override val losesAgainst = Rock
 }
 
 
