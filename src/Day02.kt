@@ -1,18 +1,25 @@
 fun main() {
 
-    fun part1(input: List<String>): Int =
-        input.map { RPS.parseRound(it) }.sumOf {
+    fun part1(input: List<List<String>>): Int =
+        input.map { Pair(it[0].toRPS(), it[1].toRPS()) }.sumOf {
             it.first.round(it.second).total()
         }
 
-    fun part2(input: List<String>): Int =
-        input.map { RPS.parseStrategy(it) }.sumOf {
+    fun part2(input: List<List<String>>): Int =
+        input.map { Pair(it[0].toRPS(), it[1]) }.sumOf {
             it.first.roundWithStrategy(it.second).total()
         }
 
-    val input = readInput("Day02")
+    val input = readInputAndSplit("Day02")
     println(part1(input))
     println(part2(input))
+}
+
+fun String.toRPS() = when(this) {
+    "A", "X" -> Rock()
+    "B", "Y" -> Paper()
+    "C", "Z" -> Scissors()
+    else -> throw IllegalArgumentException("invalid value: $this")
 }
 
 sealed interface RoundResult {
@@ -37,18 +44,6 @@ sealed interface RPS {
     val value: Int
     fun round(you: RPS): RoundResult
     fun roundWithStrategy(strategy: String): RoundResult
-
-    companion object {
-        fun parseRound(round: String) = round.split(" ").let { Pair(parse(it[0]), parse(it[1])) }
-        fun parseStrategy(round: String) = round.split(" ").let { Pair(parse(it[0]), it[1]) }
-
-        private fun parse(string: String): RPS = when (string) {
-            "A", "X" -> Rock()
-            "B", "Y" -> Paper()
-            "C", "Z" -> Scissors()
-            else -> throw IllegalArgumentException("invalid value: $string")
-        }
-    }
 }
 
 class Rock : RPS {
