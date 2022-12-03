@@ -1,10 +1,12 @@
 fun main() {
 
     fun part1(input: List<String>) =
-        input.sumOf {
-            val h1 = it.slice(0 until (it.length / 2)).toSet()
-            val h2 = it.slice((it.length / 2) until (it.length)).toSet()
-            h1.intersect(h2).firstOrNull()?.toPriority() ?: 0
+        input.sumOf { racksack ->
+            racksack.withIndex()
+                    .groupBy({ it.index < (racksack.length / 2) }, { it.value })
+                    .values.map { it.toSet() }
+                    .reduce{ acc, e -> acc.intersect(e) }
+                    .firstOrNull()?.toPriority() ?: 0
         }
 
     fun part2(input: List<String>) =
@@ -18,7 +20,7 @@ fun main() {
 }
 
 fun Char.toPriority() = if (isUpperCase()) {
-    code - 38
+    code - 'A'.code + 27
 } else {
-    code - 96
+    code - 'a'.code + 1
 }
