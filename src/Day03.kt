@@ -2,16 +2,17 @@ fun main() {
 
     fun part1(input: List<String>) =
         input.sumOf { racksack ->
-            racksack.withIndex()
-                    .groupBy({ it.index < (racksack.length / 2) }, { it.value })
-                    .values.map { it.toSet() }
-                    .reduce{ acc, e -> acc.intersect(e) }
+            racksack.chunked(racksack.length / 2)
+                    .map { it.toSet() }
+                    .reduce { acc, e -> acc.intersect(e) }
                     .firstOrNull()?.toPriority() ?: 0
         }
 
     fun part2(input: List<String>) =
         input.chunked(3).sumOf {
-            it.map { it.toSet() }.reduce { acc, e -> acc.intersect(e) }.firstOrNull()?.toPriority() ?: 0
+            it.map { it.toSet() }
+              .reduce { acc, e -> acc.intersect(e) }
+              .firstOrNull()?.toPriority() ?: 0
         }
 
     val input = readInput("Day03")
