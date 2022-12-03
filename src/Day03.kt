@@ -1,8 +1,8 @@
 fun main() {
 
     fun part1(input: List<String>) =
-        input.sumOf { racksack ->
-            racksack.chunked(racksack.length / 2)
+        input.sumOf { rucksack ->
+            rucksack.chunked(rucksack.length / 2)
                     .map { it.toSet() }
                     .reduce { acc, e -> acc.intersect(e) }
                     .firstOrNull()?.toPriority() ?: 0
