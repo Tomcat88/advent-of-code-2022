@@ -1,16 +1,16 @@
 fun main() {
 
-    fun part1(input: List<Pair<String, String>>) = input.map { (first, second) ->
+    fun getRangeSets(input: List<Pair<String, String>>) = input.map { (first, second) ->
         first.toRangeSet() to second.toRangeSet()
-    }.map { (first, second) ->
-        (first union second).size in listOf(first.size, second.size)
-    }.count { it }
+    }
 
-    fun part2(input: List<Pair<String, String>>): Int = input.map { (first, second) ->
-        first.toRangeSet() to second.toRangeSet()
-    }.map { (first, second) ->
-        (first union second).size < first.size + second.size
-    }.count { it }
+    fun part1(input: List<Pair<String, String>>) = getRangeSets(input).count { (f, s) ->
+        (f union s).size in listOf(f.size, s.size)
+    }
+
+    fun part2(input: List<Pair<String, String>>): Int = getRangeSets(input).count { (f, s) ->
+        (f union s).size < f.size + s.size
+    }
 
     val input = readInputAndSplitInPairs("Day04", ",")
     println(part1(input))
