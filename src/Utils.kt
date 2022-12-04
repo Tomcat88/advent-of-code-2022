@@ -9,7 +9,9 @@ fun readInput(name: String) = File("src", "$name.txt")
         .readLines()
 
 fun readInputAndSplit(name: String, delimiter: String = " ") = File("src", "$name.txt")
-    .readLines().map { it.split(delimiter) }
+        .readLines().map { it.split(delimiter) }
+fun readInputAndSplitInPairs(name: String, delimiter: String = " ") = File("src", "$name.txt")
+    .readLines().map { it.split(delimiter).let { it.first() to it[1] } }
 
 /**
  * Converts string to md5 hash.
