@@ -21,3 +21,6 @@ fun readInputAndSplitInPairs(name: String, delimiter: String = " ") = File("src"
 fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
     .toString(16)
     .padStart(32, '0')
+
+private var _logIndex = 0
+fun <T> T.log(prefix: String = ""): T = also { println("%03d %03d:${prefix.padStart(8 )} %s".format(_logIndex / 1000, _logIndex++ % 1000,  this)) }
