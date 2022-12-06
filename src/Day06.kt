@@ -1,8 +1,7 @@
 fun main() {
 
-    fun findMarker(input: String, n: Int) {
-        input.windowed(n).mapIndexed { index, c -> Pair(c.toCharArray().distinct().size == c.length, index + c.length) }.first { it.first }.second
-    }
+    fun findMarker(input: String, n: Int) =
+        input.windowed(n).indexOfFirst { it.toCharArray().distinct().size == it.length } + n
 
     fun part1(input: String) {
         findMarker(input, 4).log("part1")
