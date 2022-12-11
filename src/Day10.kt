@@ -20,9 +20,9 @@ fun main() {
         var sprite = 0 until 3
         input.forEachIndexed { i, cmd ->
             if (i % 40 in sprite) {
-                print("#")
+                print("██")
             } else {
-                print(".")
+                print("  ")
             }
             when (cmd) {
                 is Addx -> {
