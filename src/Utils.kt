@@ -29,11 +29,11 @@ private var _logIndex = 0
 private var startTime = System.currentTimeMillis()
 fun <T> T.log(prefix: String = ""): T = also { println("[${(System.currentTimeMillis() - startTime).toString().padStart(4)} ms] %03d %03d:${prefix.padStart(8)} %s".format(_logIndex / 1000, _logIndex++ % 1000, this)) }
 
-fun downloadAndReadInput(day: String): List<String> {
+fun downloadAndReadInput(day: String, delimiter: String = "\n"): List<String> {
     if (!Files.exists(Path.of("./src/${day}.txt"))) {
         downloadInput(day.removePrefix("Day"))
     }
-    return readInput(day)
+    return readInput(day, delimiter)
 }
 fun downloadInput(day: String) {
     val url = "https://adventofcode.com/2022/day/${day.toInt()}/input"
@@ -43,8 +43,7 @@ fun downloadInput(day: String) {
         return@send if (resp.statusCode() == 200) {
             BodySubscribers.ofFile(Path.of("./src/Day${day.padStart(2, '0')}.txt"))
         } else {
-            println("Could not download input ${resp.statusCode()} $resp")
-            BodySubscribers.ofString(Charset.defaultCharset())
+            error("Could not download input ${resp.statusCode()} $resp")
         }
     }.body()
 }

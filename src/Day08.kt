@@ -27,6 +27,6 @@ fun main() {
 
 fun List<Int>.splitOnIndex(separatorIdx: Int, reverseFirst: Boolean = false) =
     listOf(subList(0, separatorIdx).let { if (reverseFirst) it.reversed() else it }, subList(separatorIdx + 1, size))
-fun List<List<Int>>.column(i: Int): List<Int> = map { it[i] }
+fun <T> List<List<T>>.column(i: Int): List<T> = map { it[i] }
 fun List<Int>.view(v: Int) =
         indexOfFirst { it >= v }.takeIf { it != -1 }?.let { it + 1 } ?: size
