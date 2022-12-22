@@ -47,3 +47,5 @@ fun downloadInput(day: String) {
         }
     }.body()
 }
+
+typealias IntPair = Pair<Int, Int>
